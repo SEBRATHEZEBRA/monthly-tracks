@@ -1,26 +1,14 @@
 import { SSTConfig } from "sst";
-import { Api, NextjsSite } from "sst/constructs";
+import { API } from "./stacks/MyStack";
 
 export default {
   config(_input) {
     return {
       name: "monthly-tracks",
-      region: "us-east-1",
+      region: "eu-west-2",
     };
   },
   stacks(app) {
-    app.stack(function Site({ stack }) {
-      const site = new NextjsSite(stack, "site");
-      const api = new Api(stack, "api", {
-        routes: {
-          "GET /": "packages/functions/index.handler",
-        }
-      })
-
-      stack.addOutputs({
-        SiteUrl: site.url,
-        ApiEndpoint: api.url
-      });
-    });
-  },
+    app.stack(API);
+  }
 } satisfies SSTConfig;
