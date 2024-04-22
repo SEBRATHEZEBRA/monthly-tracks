@@ -10,7 +10,7 @@ export function ApiStack({ stack }: StackContext) {
       },
     },
     routes: {
-      "POST /CreatePlaylist": "packages/functions/src/createPlaylist.handler",
+      "POST /": "packages/functions/src/createPlaylist.handler",
     },
   });
 
