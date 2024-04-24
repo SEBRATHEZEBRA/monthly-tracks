@@ -1,6 +1,5 @@
 "use client";
 import BasicButton from '@/components/buttons/BasicButton';
-import { createMonthlyPlaylist } from '@/lib/spotify';
 import { useState } from 'react';
 
 export default function Home() {
@@ -10,8 +9,11 @@ export default function Home() {
 
   const handleCreatePlaylist = async(): Promise<void> => {
     console.log("button has been clicked");
-    const playlistName = await createMonthlyPlaylist(month, year);
-    console.log(`Playlist created: ${playlistName}`);
+    const playlistName = await fetch(process.env.NEXT_PUBLIC_API_URL ?? "", {
+      method: "POST",
+      body: JSON.stringify({ "userId": "seb-browser", "month": month, "year": year }),
+    });
+    console.log(`Outcome: ${playlistName}`);
     setMonth("");
     setYear("");
   };
