@@ -1,24 +1,29 @@
 {
   "name": "monthly-tracks",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
-  "type": "module",
   "scripts": {
-    "dev": "sst dev",
-    "build": "sst build",
-    "deploy": "sst deploy",
-    "remove": "sst remove",
-    "console": "sst console",
-    "typecheck": "tsc --noEmit"
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "next": "15.3.1",
+    "next-auth": "^4.24.11",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "sst": "^2.41.4",
-    "aws-cdk-lib": "2.132.1",
-    "constructs": "10.3.0",
-    "typescript": "^5.4.5",
-    "@tsconfig/node18": "^18.2.4"
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.3.1",
+    "tailwindcss": "^4",
+    "typescript": "^5"
   },
-  "workspaces": [
-    "packages/*"
-  ]
+  "packageManager": "pnpm@8.9.0+sha512.ef8859938e1f0537b9fcf0309044311392f3b38b344176e6cd4fdee21b225524b0ac2a1b08ae2ae2ddd5b3ff4b8ca496d6778e950f3e7c9f555b81325982441c"
 }
