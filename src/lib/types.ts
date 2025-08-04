@@ -13,13 +13,15 @@ export interface SpotifyIdResponse {
   id: string;
 }
 
+export interface SpotifyTrack {
+  name: string;
+  artists: { name: string }[];
+  id: string;
+}
+
 export interface SpotifyTracksResponse {
   items: {
-    track: {
-      name: string;
-      artists: { name: string }[];
-      id: string;
-    };
+    track: SpotifyTrack;
     added_at: string;
   }[];
 }
