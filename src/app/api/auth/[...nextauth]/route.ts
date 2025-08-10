@@ -1,9 +1,7 @@
-// app/api/auth/[...nextauth]/route.ts
 import NextAuth, { type NextAuthOptions } from "next-auth";
 import SpotifyProvider from "next-auth/providers/spotify";
 import type { JWT } from "next-auth/jwt";
 
-// 1) A little refresh routine
 async function refreshAccessToken(token: JWT): Promise<JWT> {
   try {
     const url = "https://accounts.spotify.com/api/token";
@@ -29,9 +27,7 @@ async function refreshAccessToken(token: JWT): Promise<JWT> {
     return {
       ...token,
       accessToken: refreshed.access_token,
-      // expires_in is in seconds
       accessTokenExpires: Date.now() + refreshed.expires_in * 1000,
-      // Spotify sometimes doesn’t return a new refresh_token, so fall back
       refreshToken: refreshed.refresh_token ?? token.refreshToken,
     };
   } catch (error) {
@@ -63,7 +59,6 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   callbacks: {
-    // 2a) When you first sign in, store access/refresh tokens & expiry
     async jwt({ token, account }) {
       if (account) {
         return {
@@ -74,16 +69,13 @@ export const authOptions: NextAuthOptions = {
         };
       }
 
-      // 2b) If token still valid, just return it
       if (Date.now() < (token.accessTokenExpires as number)) {
         return token;
       }
 
-      // 2c) Otherwise refresh
       return refreshAccessToken(token);
     },
 
-    // 3) Make the fresh accessToken available in the session
     async session({ session, token }) {
       session.accessToken = token.accessToken as string;
       session.error = token.error as string | undefined;

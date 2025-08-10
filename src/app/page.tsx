@@ -10,12 +10,10 @@ export default function Home() {
 
   return (
     <div className='flex flex-col min-h-screen p-8 sm:p-20 font-[family-name:var(--font-geist-sans)]'>
-      {/* 1) header at the top */}
       <header className='flex justify-center'>
-        <h1 className='text-4xl font-bold'>Monthly Tracks</h1>
+        <h1 className='text-4xl font-bold hover:scale-105'>Monthly Tracks</h1>
       </header>
 
-      {/* 2) middle area grows & centers its contents */}
       <main className='flex flex-1 items-center justify-center'>
         {session === null ? (
           <Button onClick={() => signIn("spotify")}>
@@ -26,7 +24,6 @@ export default function Home() {
         )}
       </main>
 
-      {/* 3) footer stuck to bottom */}
       <footer className='flex justify-center'>
         <Footer />
       </footer>
