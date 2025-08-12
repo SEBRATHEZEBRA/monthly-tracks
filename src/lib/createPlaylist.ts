@@ -162,7 +162,7 @@ export const createMonthlyPlaylist = async (
   const userId = await getUserId(accessToken);
   const playlists = await getPlaylists(accessToken, userId);
   if (playlists.includes(playlistName)) {
-    return "Playlist already exists";
+    return `Playlist ${playlistName} already exists`;
   }
 
   const monthNumber = monthNameToNumber(month);

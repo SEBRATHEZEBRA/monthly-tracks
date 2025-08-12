@@ -11,8 +11,12 @@ export const CreatePlaylistForm = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
+  const isDisabled = !month.trim() || !year.trim() || loading;
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (isDisabled) return;
+
     setLoading(true);
     setError(null);
     setSuccess(null);
@@ -31,7 +35,6 @@ export const CreatePlaylistForm = () => {
       }
 
       setSuccess(`Created playlist “${data.playlistName}”`);
-      // optionally: clear inputs
       setMonth("");
       setYear("");
     } catch (err) {
@@ -59,7 +62,15 @@ export const CreatePlaylistForm = () => {
         />
       </div>
 
-      <Button type='submit' disabled={loading}>
+      <Button
+        type='submit'
+        disabled={isDisabled}
+        className={`transition-colors ${
+          isDisabled
+            ? "bg-gray-400 text-gray-200 cursor-not-allowed"
+            : "bg-blue-600 hover:bg-blue-700 text-white"
+        }`}
+      >
         {loading ? "Creating…" : "Create Monthly Playlist"}
       </Button>
 
