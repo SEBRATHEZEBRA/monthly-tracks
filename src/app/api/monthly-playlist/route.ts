@@ -6,10 +6,10 @@ import { createMonthlyPlaylist } from "@/lib/createPlaylist";
 
 export async function POST(request: NextRequest) {
   const session = await getServerSession(authOptions);
-  console.log("Session in monthly-playlist route:", session);
   if (!session?.accessToken) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   }
+
   const { month, year } = await request.json().catch(() => ({}));
   if (typeof month !== "string" || typeof year !== "string") {
     return NextResponse.json(

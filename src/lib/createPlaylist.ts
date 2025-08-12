@@ -29,9 +29,7 @@ export const getPlaylists = async (
       },
     }
   );
-  console.log("Response from getPlaylists:", response);
   const { items } = (await response.json()) as SpotifyPlaylistResponse;
-  console.log("Items in getPlaylists:", items);
   const names = items.map((item: { name: string }) => item.name);
 
   return names;
@@ -67,7 +65,6 @@ export const addToPlaylist = async (
   playlistId: string,
   trackIds: string[]
 ): Promise<void> => {
-  console.log("TrackIds in addToPlaylist:", trackIds);
   await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
     method: "POST",
     headers: {
@@ -95,7 +92,6 @@ export const fetchTracks = async (
   );
   const { items } = (await response.json()) as SpotifyTracksResponse;
 
-  console.log("Items in fetchTracks:", items);
   const tracks: TransformedTrack[] = items.map(
     (item: { track: SpotifyTrack; added_at: string }) => {
       const track = item.track;
@@ -143,7 +139,6 @@ export const getMonthsTrackIds = async (
       addedAt.getFullYear() === targetYear && addedAt.getMonth() === targetMonth
     );
   });
-  console.log("Filtered tracks for month:", allTracks);
 
   return allTracks.map((track) => track.id);
 };
