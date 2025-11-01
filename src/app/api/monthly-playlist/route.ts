@@ -1,7 +1,7 @@
 // app/api/monthly-playlist/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth-options";
 import { createMonthlyPlaylist } from "@/lib/createPlaylist";
 
 export async function POST(request: NextRequest) {

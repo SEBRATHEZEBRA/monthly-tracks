@@ -1,0 +1,85 @@
+import { type NextAuthOptions } from "next-auth";
+import SpotifyProvider from "next-auth/providers/spotify";
+import type { JWT } from "next-auth/jwt";
+
+async function refreshAccessToken(token: JWT): Promise<JWT> {
+  try {
+    const url = "https://accounts.spotify.com/api/token";
+    const basic = Buffer.from(
+      `${process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID}:${process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_SECRET}`
+    ).toString("base64");
+
+    const response = await fetch(url, {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        Authorization: `Basic ${basic}`,
+      },
+      body: new URLSearchParams({
+        grant_type: "refresh_token",
+        refresh_token: token.refreshToken!,
+      }),
+      method: "POST",
+    });
+
+    if (!response.ok) throw await response.json();
+
+    const refreshed = await response.json();
+    return {
+      ...token,
+      accessToken: refreshed.access_token,
+      accessTokenExpires: Date.now() + refreshed.expires_in * 1000,
+      refreshToken: refreshed.refresh_token ?? token.refreshToken,
+    };
+  } catch (error) {
+    console.error("🔄 Error refreshing access token", error);
+    return {
+      ...token,
+      error: "RefreshAccessTokenError",
+    };
+  }
+}
+
+export const authOptions: NextAuthOptions = {
+  secret: process.env.NEXTAUTH_SECRET,
+  providers: [
+    SpotifyProvider({
+      clientId: process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID!,
+      clientSecret: process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_SECRET!,
+      authorization: {
+        url: "https://accounts.spotify.com/authorize",
+        params: {
+          scope:
+            "user-read-email playlist-read-private playlist-modify-private playlist-modify-public",
+          show_dialog: "true",
+        },
+      },
+    }),
+  ],
+  session: {
+    strategy: "jwt",
+  },
+  callbacks: {
+    async jwt({ token, account }) {
+      if (account) {
+        return {
+          ...token,
+          accessToken: account.access_token!,
+          refreshToken: account.refresh_token!,
+          accessTokenExpires: Date.now() + Number(account.expires_in!) * 1000,
+        };
+      }
+
+      if (Date.now() < (token.accessTokenExpires as number)) {
+        return token;
+      }
+
+      return refreshAccessToken(token);
+    },
+
+    async session({ session, token }) {
+      session.accessToken = token.accessToken as string;
+      session.error = token.error as string | undefined;
+      return session;
+    },
+  },
+};
